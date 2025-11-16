@@ -40,8 +40,22 @@
 
 // app/api/auth/[...nextauth]/route.ts
 
-import { handlers } from "@/auth";
+// import { handlers } from "@/auth";
 
-// This exports the GET and POST methods, which Next.js requires for the route handler,
-// and resolves the "is not a module" type error.
-export const { GET, POST } = handlers;
+// // This exports the GET and POST methods, which Next.js requires for the route handler,
+// // and resolves the "is not a module" type error.
+// export const { GET, POST } = handlers;
+
+// app/api/auth/[...nextauth]/route.ts
+
+import { handlers } from "@/auth";
+import type { NextRequest } from 'next/server';
+
+// ...
+export async function GET(req: NextRequest) {
+  return handlers.GET(req);
+}
+
+export async function POST(req: NextRequest) {
+  return handlers.POST(req);
+}
