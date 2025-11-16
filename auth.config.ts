@@ -1,7 +1,6 @@
 import type { NextAuthConfig } from 'next-auth';
  
 export const authConfig = {
-    providers: [], // required only for TypeScript, harmless
     pages: {
         signIn: '/login',
     },
@@ -17,31 +16,6 @@ export const authConfig = {
         }
         return true;
         },
-    }
+    },
+    providers: [],
 } satisfies NextAuthConfig;
-
-// auth.config.ts
-// import type { NextAuthConfig } from "next-auth";
-
-// export const authConfig = {
-//   pages: {
-//     signIn: "/login",
-//   },
-//   callbacks: {
-//     authorized({ auth, request: { nextUrl } }) {
-//       const isLoggedIn = !!auth?.user;
-//       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-
-//       if (isOnDashboard) {
-//         if (isLoggedIn) return true;
-//         return false;
-//       }
-
-//       if (isLoggedIn) {
-//         return Response.redirect(new URL("/dashboard", nextUrl));
-//       }
-
-//       return true;
-//     },
-//   },
-// } satisfies NextAuthConfig;
