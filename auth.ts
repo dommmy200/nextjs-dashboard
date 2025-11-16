@@ -52,7 +52,11 @@ import postgres from 'postgres';
 // NOTE: This file uses POSTGRES_URL which you confirmed earlier.
 // If the database functions still fail after this build fix, we MUST re-examine Vercel logs
 // for connection errors, as the variable name is correct here.
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+// const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+const sql = postgres(process.env.POSTGRES_URL!, { 
+    connect_timeout: 15, // Increase timeout to 15 seconds
+    ssl: { rejectUnauthorized: false } 
+});
 
 async function getUser(email: string): Promise<User | undefined> {
     try {
