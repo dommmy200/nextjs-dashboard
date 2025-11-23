@@ -1,17 +1,16 @@
+// app/api/health/route.ts
 import { NextResponse } from 'next/server';
 import postgres from 'postgres';
 
 export async function GET() {
-  try {
-    // Check if env vars exist
-    const envCheck = {
-      POSTGRES_URL: !!process.env.POSTGRES_URL,
-      DATABASE_URL: !!process.env.DATABASE_URL,
-      AUTH_URL: !!process.env.AUTH_URL,
-      AUTH_SECRET: !!process.env.AUTH_SECRET,
-    };
+  const envCheck = {
+    POSTGRES_URL: !!process.env.POSTGRES_URL,
+    DATABASE_URL: !!process.env.DATABASE_URL,
+    AUTH_URL: !!process.env.AUTH_URL,
+    AUTH_SECRET: !!process.env.AUTH_SECRET,
+  };
 
-    // Try to connect to database
+  try {
     const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
     
     if (!dbUrl) {
@@ -27,14 +26,13 @@ export async function GET() {
       ssl: { rejectUnauthorized: false }
     });
 
-    // Test actual database connection
     const result = await sql`SELECT NOW() as time, COUNT(*) as invoice_count FROM invoices`;
     const customers = await sql`SELECT COUNT(*) as customer_count FROM customers`;
     
     await sql.end();
 
     return NextResponse.json({
-      status: 'connected',
+      status: 'connected ✅',
       timestamp: result[0].time,
       data: {
         invoices: result[0].invoice_count,
@@ -46,16 +44,10 @@ export async function GET() {
 
   } catch (error: any) {
     return NextResponse.json({
-      status: 'error',
+      status: 'error ❌',
       message: error.message,
       code: error.code,
-      hint: error.code === 'ECONNREFUSED' ? 'Database is not accessible' : 
-            error.code === '42P01' ? 'Tables do not exist - run seed script' : 
-            'Check your database connection string',
-      env: {
-        POSTGRES_URL: !!process.env.POSTGRES_URL,
-        DATABASE_URL: !!process.env.DATABASE_URL,
-      }
+      env: envCheck,
     }, { status: 500 });
   }
 }
