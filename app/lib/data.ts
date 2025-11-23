@@ -9,7 +9,7 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
-const sql = postgres(process.env.POSTGRES_DATABASE_URL!, { 
+const sql = postgres(process.env.POSTGRES_URL!, { 
   connect_timeout: 15, // Increase timeout to 15 seconds
   ssl: { rejectUnauthorized: false } 
 });
